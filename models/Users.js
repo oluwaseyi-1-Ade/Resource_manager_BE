@@ -32,9 +32,17 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.ENUM(
         "computer science",
         "cyber security",
-        "information science",
+        "information system",
       ),
       allowNull: false,
+      validate: {
+        isIn: {
+          args: [[  "computer science",
+        "cyber security",
+        "information system"]],
+        msg: "Invalid department. Please select Computer Science, Cyber Security, or Information System."
+        }
+      }
     },
     role: {
       type: DataTypes.ENUM("admin", "staff", "classrep"),
