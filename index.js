@@ -14,7 +14,9 @@ app.get("/", (req, res) => {
 });
 
 import AuthRouter from './routes/AuthRouter.js'
+import UsersRouter from './routes/UsersRouter.js'
 app.use('/auth', AuthRouter);
+app.use('/users', UsersRouter);
 
 db.sequelize
   .sync({ alter: true }) /// remove { alter: true } for prod

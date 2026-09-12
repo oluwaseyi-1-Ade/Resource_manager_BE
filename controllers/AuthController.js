@@ -69,21 +69,21 @@ export const login = async (req, res) => {
         department: existingUser.department,
       },
       process.env.accessTokenSecret,
+      { expiresIn: "1h" },
     );
 
     // Convert the Sequelize instance to a plain JSON object
     const userData = existingUser.toJSON();
 
+    // remove password
     delete userData.password;
 
     // login and send user data and jwt
-    res
-      .status(200)
-      .json({
-        message: "User logged in successfully",
-        token: token,
-        user: userData,
-      });
+    res.status(200).json({
+      message: "User logged in successfully",
+      token: token,
+      user: userData,
+    });
   } catch (error) {
     if (
       error.name === "SequelizeValidationError" ||
@@ -92,6 +92,35 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: error.errors[0].message });
     }
 
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const userDetails = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const userData = await Users.findByPk(userId, {
+      attributes: { exclude: ["password"] },
+    });
+
+    if (!userData) {
+      return res.status(404).json({ message: "User not found!!!" });
+    }
+
+    res.status(200).json({ user: userData });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const logout = async (req, res) => {
+  try {
+    // If you were using HTTP-only cookies, you would write res.clearCookie('token') here.
+    // But since you are sending the token in the JSON response for the frontend to manage:
+    
+    res.status(200).json({ message: "User logged out successfully" });
+  } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
