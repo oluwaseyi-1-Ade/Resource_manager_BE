@@ -69,7 +69,7 @@ export const login = async (req, res) => {
         department: existingUser.department,
       },
       process.env.accessTokenSecret,
-      { expiresIn: "1h" },
+      { expiresIn: "2h" },
     );
 
     // Convert the Sequelize instance to a plain JSON object

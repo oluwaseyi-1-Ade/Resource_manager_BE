@@ -5,12 +5,6 @@ const Users = db.Users;
 //get all users
 export const getAllUsers = async (req, res) => {
   try {
-    const role = req.user.role;
-    if (role !== "admin") {
-      return res
-        .status(403)
-        .json({ message: "You are forbidden to carry out this operation" });
-    }
 
     // Extract page and limit (with defaults), put the rest into queryFilters
     const { page = 1, limit = 10, ...queryFilters } = req.query;
@@ -31,9 +25,9 @@ export const getAllUsers = async (req, res) => {
 
     res.status(200).json({
       message: "Success",
-      data: allUsers,
+      users: allUsers,
       pagination: {
-        totalItems: count,
+        total: count,
         totalPages: Math.ceil(count / limitInt),
         currentPage: pageInt,
       },
@@ -44,7 +38,56 @@ export const getAllUsers = async (req, res) => {
 };
 
 // approve user
+export const approveUser = async (req, res) => {
+  try {
+    // get the id from the req params 
+    const userId = req.params.id;
+    //check if user exist then change status
+    const existingUser = await Users.findByPk(userId);
+
+    if(!existingUser){
+      return res.status(404).json({message: "User not registered"})
+    }
+
+    const newStatus = await existingUser.update({status: "approved"});
+
+    res.status(200).json({message: "User Approved successfully", user: newStatus});
+
+  } catch (error) {
+    res.status(500).json({message: error.message})
+  }
+}
 
 //reject user
+export const rejectUser = async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+   const deletedCount = await Users.destroy({where: {id: userId}});
+
+   if(deletedCount === 0) {
+    return res.status(404).json({message: "User not found"});
+   }
+
+    res.status(200).json({message: "User rejected succesfully"});
+  } catch (error) {
+    res.status(500).json({message: error.message});
+  }
+}
 
 //revoke user
+export const revokeUser = async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+   const revokedCount = await Users.destroy({where: {id: userId}});
+
+   if(revokedCount === 0) {
+    return res.status(404).json({message: "User not found"});
+   }
+
+    res.status(200).json({message: "User revoked succesfully"});
+  } catch (error) {
+    res.status(500).json({message: error.message});
+  }
+}

@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.json({ message: "Message" });
+  res.json({ message: "Server working fine" });
 });
 
 import AuthRouter from './routes/AuthRouter.js'
@@ -19,7 +19,7 @@ app.use('/auth', AuthRouter);
 app.use('/users', UsersRouter);
 
 db.sequelize
-  .sync({ alter: true }) /// remove { alter: true } for prod
+  .sync() /// remove { alter: true } for prod
   .then(() => {
     app.listen(process.env.PORT, () => {
       console.log(`Server started on port ${process.env.PORT}`);

@@ -25,3 +25,11 @@ export const validateToken = async (req, res, next) => {
     return res.status(401).json({ message: "Invalid or expired token" }); 
   }
 };
+
+export const verifyAdmin = async (req, res, next) => {
+  if(req.user.role !== "admin") {
+    return res.status(403).json({message: 'You are forbidden from performing this operation'})
+  }
+
+  next();
+}
