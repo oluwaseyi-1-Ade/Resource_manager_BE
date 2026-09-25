@@ -19,9 +19,11 @@ if (config.use_env_variable) {
 
 // 1. Import your models
 import userModel from './Users.js';
+import resourceModel from './Resources.js'
 
 // 2. Initialize your models
 db.Users = userModel(sequelize, Sequelize.DataTypes);
+db.Resources = resourceModel(sequelize, Sequelize.DataTypes);
 
 // 3. The Magic Loop (Ready for when you add more models later)
 Object.keys(db).forEach(modelName => {

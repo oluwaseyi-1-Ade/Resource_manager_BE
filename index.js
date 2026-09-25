@@ -15,8 +15,10 @@ app.get("/", (req, res) => {
 
 import AuthRouter from './routes/AuthRouter.js'
 import UsersRouter from './routes/UsersRouter.js'
+import ResourcesRouter from "./routes/ResourcesRouter.js";
 app.use('/auth', AuthRouter);
 app.use('/users', UsersRouter);
+app.use('/resources', ResourcesRouter);
 
 db.sequelize
   .sync() /// remove { alter: true } for prod
