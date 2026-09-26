@@ -1,6 +1,6 @@
 import express from 'express';
 import { validateToken, verifyAdmin } from '../middlewares/AuthMiddleware.js';
-import { createResource, editResource, getResources } from '../controllers/ResourcesController.js';
+import { createResource, editResource, getResources, uploadResourceImage } from '../controllers/ResourcesController.js';
 
 const router = express.Router();
 

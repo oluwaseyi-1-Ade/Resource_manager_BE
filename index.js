@@ -1,11 +1,12 @@
 import express from "express";
-import { config } from "dotenv";
+import 'dotenv/config'
+// import { config } from "dotenv";
 import db from "./models/index.js";
 import cors from 'cors';
 
 const app = express();
 
-config();
+// config();
 app.use(cors());
 app.use(express.json());
 
@@ -16,9 +17,15 @@ app.get("/", (req, res) => {
 import AuthRouter from './routes/AuthRouter.js'
 import UsersRouter from './routes/UsersRouter.js'
 import ResourcesRouter from "./routes/ResourcesRouter.js";
+import { validateToken } from "./middlewares/AuthMiddleware.js";
+import { uploadResourceImage } from "./controllers/ResourcesController.js";
+import { upload } from "./middlewares/MulterMiddleware.js";
+
 app.use('/auth', AuthRouter);
 app.use('/users', UsersRouter);
 app.use('/resources', ResourcesRouter);
+//upload resource image
+app.post('/upload-image', validateToken, upload.single('image'), uploadResourceImage);
 
 db.sequelize
   .sync() /// remove { alter: true } for prod
