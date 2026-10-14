@@ -20,10 +20,23 @@ if (config.use_env_variable) {
 // 1. Import your models
 import userModel from './Users.js';
 import resourceModel from './Resources.js'
+import bookingModel from './Booking.js'
 
 // 2. Initialize your models
 db.Users = userModel(sequelize, Sequelize.DataTypes);
 db.Resources = resourceModel(sequelize, Sequelize.DataTypes);
+db.Bookings = bookingModel(sequelize, Sequelize.DataTypes);
+
+
+// --- ASSOCIATIONS ---
+// 1. User <-> Booking
+db.Users.hasMany(db.Bookings, { foreignKey: 'userId', as: 'bookings', onDelete: 'CASCADE' });
+db.Bookings.belongsTo(db.Users, { foreignKey: 'userId', as: 'user', onDelete: 'CASCADE' });
+
+// 2. Resource <-> Booking
+db.Resources.hasMany(db.Bookings, { foreignKey: 'resourceId', as: 'bookings', onDelete: 'CASCADE' });
+db.Bookings.belongsTo(db.Resources, { foreignKey: 'resourceId', as: 'resource', onDelete: 'CASCADE' });
+
 
 // 3. The Magic Loop (Ready for when you add more models later)
 Object.keys(db).forEach(modelName => {
