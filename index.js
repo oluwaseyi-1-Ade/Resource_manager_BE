@@ -18,6 +18,7 @@ import AuthRouter from './routes/AuthRouter.js'
 import UsersRouter from './routes/UsersRouter.js'
 import ResourcesRouter from "./routes/ResourcesRouter.js";
 import BookingRouter from './routes/BookingsRouter.js'
+import LibraryRouter from './routes/LibraryRouter.js'
 import { validateToken } from "./middlewares/AuthMiddleware.js";
 import { uploadResourceImage } from "./controllers/ResourcesController.js";
 import { upload } from "./middlewares/MulterMiddleware.js";
@@ -26,6 +27,7 @@ app.use('/auth', AuthRouter);
 app.use('/users', UsersRouter);
 app.use('/resources', ResourcesRouter);
 app.use('/bookings', BookingRouter);
+app.use('/library', LibraryRouter);
 //upload resource image
 app.post('/upload-image', validateToken, upload.single('image'), uploadResourceImage);
 

@@ -4,11 +4,11 @@ const Bookings = db.Bookings;
 
 export const getAllBookings = async (req, res) => {
   try {
-    const { limit = 10 } = req.query;
+    const { limit = 10, user:userId } = req.query;
     const limitInt = parseInt(limit);
 
     const { count, rows: bookingsData } = await Bookings.findAndCountAll({
-      limit: limitInt,
+      limit: limitInt, where:{ userId: userId},
       include: [
         {
           model: db.Users,
@@ -37,9 +37,25 @@ export const bookingSchedule = async(req, res) => {
     const {date, limit} = req.query;
     const limitInt = parseInt(limit);
 
-    const {count, rows: publicData} = await Bookings.findAndCountAll({limit: limitInt, where: {date: date}});
+    const {count, rows: publicData} = await Bookings.findAndCountAll({limit: limitInt, where: {date: date}, include: [
+              {
+          model: db.Users,
+          as: 'user', // Must match the 'as' string in your index.js association
+          attributes: ['id', 'name', 'email', 'department', 'role'] // Excludes passwords and sensitive data
+        }
+    ]});
 
-    res.status(200).json({message:"success", data: publicData || [] })
+    // Format the data to exactly match the old frontend's expectations
+    const formattedData = publicData.map(booking => {
+      const plainBooking = booking.toJSON(); // Convert Sequelize instance to plain JS object
+      
+      // Overwrite the 'resource' key with the string ID the frontend overlap checker needs
+      plainBooking.resource = String(plainBooking.resourceId); 
+      
+      return plainBooking;
+    });
+
+    res.status(200).json({message:"success", data: formattedData || [] });
  } catch (error) {
         res.status(500).json({ message: error.message });
  }
