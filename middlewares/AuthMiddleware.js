@@ -33,3 +33,13 @@ export const verifyAdmin = async (req, res, next) => {
 
   next();
 }
+
+
+// verifystaff
+export const verifyStaff = async (req, res, next) => {
+  if(req.user.role !== 'staff') {
+    return res.status(403).json({message: 'You are forbidden from performing this operation'});
+  }
+
+  next();
+};
