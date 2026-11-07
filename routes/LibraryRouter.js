@@ -1,6 +1,7 @@
 import express from 'express';
 import { validateToken, verifyStaff } from '../middlewares/AuthMiddleware.js';
-import { fetchPublicLibrary, fetchStaffLibrary } from '../controllers/LibraryController.js';
+import { createLibraryMaterial, deleteLibraryMaterial, fetchPublicLibrary, fetchStaffLibrary, UpdateLibraryMaterial, uploadLibraryFile } from '../controllers/LibraryController.js';
+import { upload } from '../middlewares/MulterMiddleware.js';
 
 
 const router = express.Router();
@@ -11,6 +12,16 @@ router.get(`/staff`, validateToken, verifyStaff, fetchStaffLibrary);
 // get materials by public -/library/
 router.get(`/`, fetchPublicLibrary);
 
+//upload library file
+router.post(`/upload-file`, validateToken, verifyStaff, upload.single("file"), uploadLibraryFile);
 
+//create library file
+router.post(`/`, validateToken, verifyStaff, createLibraryMaterial);
+
+//update library file
+router.patch(`/:id`, validateToken, verifyStaff, UpdateLibraryMaterial);
+
+//update library file
+router.delete(`/:id`, validateToken, verifyStaff, deleteLibraryMaterial);
 
 export default router;
