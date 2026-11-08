@@ -1,6 +1,6 @@
 import express from 'express';
 import { validateToken, verifyStaff } from '../middlewares/AuthMiddleware.js';
-import { createLibraryMaterial, deleteLibraryMaterial, fetchPublicLibrary, fetchStaffLibrary, UpdateLibraryMaterial, uploadLibraryFile } from '../controllers/LibraryController.js';
+import { createLibraryMaterial, deleteLibraryMaterial, downloadLibraryMaterial, fetchPublicLibrary, fetchStaffLibrary, UpdateLibraryMaterial, uploadLibraryFile } from '../controllers/LibraryController.js';
 import { upload } from '../middlewares/MulterMiddleware.js';
 
 
@@ -15,13 +15,16 @@ router.get(`/`, fetchPublicLibrary);
 //upload library file
 router.post(`/upload-file`, validateToken, verifyStaff, upload.single("file"), uploadLibraryFile);
 
-//create library file
+//create library material
 router.post(`/`, validateToken, verifyStaff, createLibraryMaterial);
 
-//update library file
+//update library material
 router.patch(`/:id`, validateToken, verifyStaff, UpdateLibraryMaterial);
 
-//update library file
+//update library material
 router.delete(`/:id`, validateToken, verifyStaff, deleteLibraryMaterial);
+
+//download library material
+router.get('/download-file', downloadLibraryMaterial)
 
 export default router;

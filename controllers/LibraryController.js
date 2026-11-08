@@ -147,3 +147,26 @@ export const deleteLibraryMaterial = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+
+// download material 
+export const downloadLibraryMaterial = async (req, res) => {
+  try {
+    let {fileUrl} = req.query;
+
+    if(!fileUrl) res.status(400).json({message: "File URL not provided"});
+
+    // CLOUDINARY PRO-TIP: 
+    // By default, browsers will open PDFs in a new tab rather than downloading them.
+    // To force the browser to physically download the file, we inject 'fl_attachment' into the URL.
+    // if(fileUrl.includes('/upload/')) {
+    //   fileUrl = fileUrl.replace('/upload/', '/upload/fl_attachment/');
+    // }
+
+    // Redirect directly to the Cloudinary download link
+    res.redirect(fileUrl);
+    
+  } catch (error) {
+     res.status(500).json({ message: error.message });
+  }
+}
